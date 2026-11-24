@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LINEログイン（認証状態取得用）</title>
+<style>body{font-family:system-ui,sans-serif;margin:2rem;line-height:1.7}</style>
+</head>
+<body>
+<h1>LINEログイン</h1>
+<p id="msg">LINEログインを確認しています…</p>
+<!-- 最小のLIFFページ。ログインのみ行い、トークン・プロフィールの表示・保存・送信は一切しない。 -->
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  // デプロイ時に LIFF ID を設定する（LIFF ID は秘密情報ではない）。
+  var LIFF_ID = "__LIFF_ID__";
+  var msg = document.getElementById("msg");
+  if (LIFF_ID.indexOf("__") === 0) {
+    msg.textContent = "LIFF ID が未設定です（index.html の LIFF_ID を設定してください）。";
+  } else {
+    liff.init({ liffId: LIFF_ID }).then(function () {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        msg.textContent = "LINEログイン済みです。ターミナルに戻って Enter を押してください。";
+      }
+    }).catch(function () {
+      msg.textContent = "LIFFの初期化に失敗しました。LIFF ID とエンドポイントURLの設定を確認してください。";
+    });
+  }
+</script>
+</body>
+</html>
